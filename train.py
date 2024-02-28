@@ -29,10 +29,8 @@ def main(args):
         return metric.compute(predictions=np.argmax(p.predictions, axis=1), references=p.label_ids)
 
     def transform(batch):
-        # Take a list of PIL images and turn them to pixel values
         inputs = processor([x for x in batch['Path']], return_tensors='pt')
 
-        # Don't forget to include the labels!
         inputs['labels'] = batch['ClassId']
         return inputs
     
@@ -46,19 +44,13 @@ def main(args):
     training_args = TrainingArguments(
         output_dir=args.model_save_dir,
         per_device_train_batch_size=16,
-        # gradient_accumulation_steps=4,
         evaluation_strategy="epoch",
         save_strategy="epoch",
         num_train_epochs=4,
         fp16=True,
-        # save_steps=1000000000,
-        # eval_steps=1000000000,
-        # logging_steps=1000000000,
         learning_rate=2e-4,
-        # save_total_limit=2,
         remove_unused_columns=False,
         push_to_hub=False,
-        # report_to='tensorboard',
         load_best_model_at_end=True,
     )
 
@@ -85,5 +77,3 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     main(args)
-
-    #98.81
